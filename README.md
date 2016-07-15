@@ -1,4 +1,4 @@
-#RaspberryPI Gateway#
+#DevIoT RaspberryPi Starter Kit#
 RaspberryPi gateway service can be used to work with [DevIoT](https://developer.cisco.com/site/devnetlabs/deviot/), supply the DevIot capability with read sensor data, control sensor status, define sensor action 
 
 This code also can be as a sample code to show how to use the Gateway Service SDK, use it build a completed gateway service which can work with DevIot
@@ -20,7 +20,7 @@ This guide will show how to build this sample step by step
 
 2.setting.cfg: the custom's setting file, you can put all you setting item in this file with json format
 
-3.setup.py file: this file will help you install some dependency lib for this sample
+3.setup.py file: this file will help you install some dependency lib for this kit
 
 4.sensors folder: contain all the sensor logic model, those model map to real sensor connected to the Pi
 
@@ -28,19 +28,19 @@ This guide will show how to build this sample step by step
 
 ##Prerequisite
 ###Hardware###
-1.This sample depended on [Raspberry-Pi](https://www.raspberrypi.org/), you can get this pi device from [here](http://www.amazon.com/Programming-Raspberry-Pi-Second-Getting-ebook/dp/B015K0URT8/ref=sr_1_1?s=digital-text&ie=UTF8&qid=1458615397&sr=1-1&keywords=raspberry+pi)
+1.This kit depended on [Raspberry-Pi](https://www.raspberrypi.org/), you can get this pi device from [here](http://www.amazon.com/Programming-Raspberry-Pi-Second-Getting-ebook/dp/B015K0URT8/ref=sr_1_1?s=digital-text&ie=UTF8&qid=1458615397&sr=1-1&keywords=raspberry+pi)
 
-2.This sample use [GrovePi+ Starter Kit](http://www.dexterindustries.com/grovepi/), you can get this device from[here](http://www.amazon.com/Dexter-Industries-GrovePi-_Starter-Starter/dp/B00TXTZ5SQ/ref=sr_1_1?s=toys-and-games&ie=UTF8&qid=1458615492&sr=1-1&keywords=grovepi+starter+kit).
+2.This kit use [GrovePi+ Starter Kit](http://www.dexterindustries.com/grovepi/), you can get this device from[here](http://www.amazon.com/Dexter-Industries-GrovePi-_Starter-Starter/dp/B00TXTZ5SQ/ref=sr_1_1?s=toys-and-games&ie=UTF8&qid=1458615492&sr=1-1&keywords=grovepi+starter+kit).
 
 3.SD card for Raspberry Pi, Power adapter(5V), USB cable, Network cable, HDMI cable, Display with HDML interface
 
 ###Software###
-4.This sample code need meet all Prerequisites the in [Prerequisite](https://cto-github.cisco.com/tingxxu/iot-gateway/blob/master/README.md)
+4.This kit code need base on Python2.7
 
 5.GrovePi SDK
 
-##How to use
-###Build the hardware###
+##How to Use
+###Build the Hardware###
 
 1.Prepare your RaspberryPi os environment in your SD card
 
@@ -86,21 +86,17 @@ install the python follow [here](https://www.raspberrypi.org/documentation/linux
 Your SD card now has what it needs to start using the GrovePi!
 [Here is info more about install GrovePi SDK](http://www.dexterindustries.com/GrovePi/get-started-with-the-grovepi/)
 
-###Use sample code directly###
-7.Prepare the code.Download this sample code and the [gateway code](https://cto-github.cisco.com/tingxxu/iot-gateway/tree/master/gateway). copy the gateway folder into the raspberry-pi folder. 
-In your workspace should like this:
-
-![RaspberryPi workspace](images/raspberry_folder.jpg "RaspberryPi workspace")
-
-8.Install the dependency.Run the setup.py file use follow command:
+7.Install the dependency. In your workspace, run the setup.py file use follow command:
     
-    sudo python setup.py develop
+    sudo python setup.py install
 
-this script will install "flask","paho-mqtt" lib for this sample
+this script will install all dependency lib for this kit
 
-9.Connect the sensors to GrovePi and configuration.
+###Configuration###
 
-In this sample, we connect one button sensor to A0 port,one sound sensor to A1 port, one light sensor to A2 port ,one led sensor to D3 port and one buzzer sensor to D4 port.
+8.Connect the sensors to GrovePi and configuration.
+
+By default, we connect one button sensor to A0 port,one sound sensor to A1 port, one light sensor to A2 port ,one led sensor to D3 port and one buzzer sensor to D4 port.
 
 The port number with A prefix means it is readable pin port, you just can read data, the D prefix means you just can write data to this pin port.
 
@@ -109,7 +105,6 @@ Check the connection setting in setting.cfg, the setting.cfg file should like th
     {
         "address":"10.140.92.25:9000",                  #required, it is DevIot platform server address, format should be: ip:port
         "mqtthost":"10.140.92.25:1883",                 #required, it is the DevIot platform MQTT server address, format should be: ip:port
-        "communicator": "MQTT",                         #optional, the way about connect the server, MQTT or HTTP, by default the value will be "MQTT"
     
         "appname":"raspberry",                          #optional, the name of you gateway service app, it should not be empty, by default the value will be "arduino".
         "account":"",                                   #optional, your account of DevIot platform, most of the time,it should be a mail address, by default it will be empty, it means this gateway will be used for all DevIot users
@@ -134,40 +129,41 @@ Check the connection setting in setting.cfg, the setting.cfg file should like th
                     "name":"RLight",                    
                     "kind":"light",                     
                     "pin": 2,                           
-                    "type": "data"                      #necessary, it means A2 is readable
+                    "type": "data"                      
                 },
-                "led_r":                                #necessary, sensor id is the identify id for the sensor, we suggest that you named a sensor as this format: kind_fix
+                "led_r":                                
                 {
-                    "name":"RLed",                      #necessary, name is display name of sensor in DevIot platform
-                    "kind":"led",                       #necessary, kind is the a type identifier of sensor
-                    "pin": 3,                           #necessary, connect to the D3 port
-                    "type": "action"                    #necessary, it means D3 is writeable
+                    "name":"RLed",                      
+                    "kind":"led",                       
+                    "pin": 3,                           
+                    "type": "action"                    
                 },
-                "buzzer_r":                             #necessary, sensor id is the identify id for the sensor, we suggest that you named a sensor as this format: kind_fix
+                "buzzer_r":                             
                 {
-                    "name":"RBuzzer",                   #necessary, name is display name of sensor in DevIot platform
-                    "kind":"buzzer",                    #necessary, kind is the a type identifier of sensor
-                    "pin": 4,                           #necessary, connect to the D4 port
-                    "type": "action"                    #necessary, it means D4 is writeable
+                    "name":"RBuzzer",                   
+                    "kind":"buzzer",                    
+                    "pin": 4,                           
+                    "type": "action"                    
                 }
             }
     }
     
-make sure the content(without the comment) in setting.cfg file is json format, you can check it in [here](https://jsonformatter.curiousconcept.com/)
+Make sure the content(without the comment) in setting.cfg file is json format, you can check it in [here](https://jsonformatter.curiousconcept.com/)
     
-you can add or remove the sensor segment in "sensors" segment in setting.cfg file by your requirements.
+You can add or remove the sensor segment in "sensors" segment in setting.cfg file by your requirements.
 
 Please do not let multiple sensors use same pin.
 
-10.Configure the code to let the gateway auto run when RaspberryPi started.
+9. Configure the code to let the gateway auto run when RaspberryPi started.
     
 * Open the terminal window and type follow command to open the rc.local file by nano:
     
         sudo nano /etc/rc.local
 * Add follow command to rc.local file:
         
-        cd /{your code directory}
-        python app.py &
+        sleep 5                         # wait for 5 seconds to make sure the RaspberryPi have connected the network
+        cd /{your code directory}       # cd to you code root folder
+        sudo python app.py &            # run it
         
 Here is a sample:
 
@@ -176,22 +172,14 @@ Here is a sample:
 
 * Press ctrl + o to save rc.local file then close the rc.local file.
     
-11.Start the gateway.
+10.Start the gateway.
 For this purpose, you have two choices: one is restart the RaspberryPi, once the RaspberryPi started, the gateway will run automatically, another is that:
 Open the terminal window and cd to workspace folder, type follow command to run it
     
     python app.py 
 
 ##How to test
-If in your setting.cfg file, you use MQTT as the communicator, you can use [mqtool to test you service](https://cto-github.cisco.com/tingxxu/iot-gateway/tree/master/tools)
-
-if you use HTTP protocol, you can use postman to test your service:
-
-* open the HTTP RESTfull API document by open the link shown in you terminal window:
-    
-    ![Open RESTful API](images/httpterminal.png "RESTful API Link")
-    
-* Use [PostMan](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en) to test those API.
+You can use [mqtool to test you service](https://cto-github.cisco.com/tingxxu/iot-gateway/tree/master/tools)
 
 ##Troubleshoting
 * Error info contain the "config": 
