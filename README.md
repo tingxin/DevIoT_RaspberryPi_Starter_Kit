@@ -177,7 +177,7 @@ Here is a sample:
 For this purpose, you have two choices: one is restart the RaspberryPi, once the RaspberryPi started, the gateway will run automatically, another is that:
 Open the terminal window and cd to workspace folder, type follow command to run it
     
-    python app.py 
+    sudo python app.py 
 
 ##How to test
 You can use [mqtool to test you service](https://github.com/tingxin/DevIoT_Test_Tool)
