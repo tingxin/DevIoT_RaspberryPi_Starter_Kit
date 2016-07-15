@@ -49,6 +49,7 @@ This guide will show how to build this sample step by step
 * Format you SD card
 
 * Use window install the OS image to the SD card. you can use [Win32 Disk Manager](https://sourceforge.net/projects/win32diskimager/) do this 
+    
     I strongly recommend you do this use windows, i have met many issues when i installed it by mac os
 
 * Attach the SD card to the RaspberryPi
@@ -179,7 +180,7 @@ Open the terminal window and cd to workspace folder, type follow command to run 
     python app.py 
 
 ##How to test
-You can use [mqtool to test you service](https://cto-github.cisco.com/tingxxu/iot-gateway/tree/master/tools)
+You can use [mqtool to test you service](https://github.com/tingxin/DevIoT_Test_Tool)
 
 ##Troubleshoting
 * Error info contain the "config": 
@@ -198,176 +199,6 @@ You can use [mqtool to test you service](https://cto-github.cisco.com/tingxxu/io
         grovepi.analogRead(0)
         
     if there is still something wrong, it means you  GrovePi SDK did not installed correctly.
-    
-
-##Programing with gateway sdk##
-if you want to know how to use the gateway sdk to program this sample, you can follow bellow steps:
-
-1.Download the gateway folder and copy it into you workspace folder
-
-2.Configuration:Create a new file named setting.cfg in your workspace folder, then you can follow the relation between sensor and GrovePi port, code the setting item like this:
-     
-     "button_r":                                 #necessary, sensor id is the identify id for the sensor, we suggest that you named a sensor as this format: kind_fix
-         {
-             "name":"RButton",                   #necessary, name is display name of sensor in DevIot platform
-             "kind":"button",                    #necessary, kind is the a type identifier of sensor
-             "pin": 0,                           #necessary, connect to the A0 port
-             "type": "data"                      #necessary, it means A0 is readable
-         }
-it means the button sensor connect to the O port and the pin is readable(AO port)
-
-we can also set the DevIot platform address in this file. it is better to organize those settings with JSON format. 
-
-when we finished those setting, the setting.cfg file should be like this:
-    
-    {
-    "address":"10.140.92.25:9000",
-    "mqtthost":"mqtt.cisco.com",
-    "mqttport":7777,
-    "sensors": {
-        "button_r":
-        {
-            "name":"RButton",
-            "kind":"button",
-            "pin": 0,
-            "type": "data"
-        },
-        "sound_r":
-        {
-            "name":"RSound",
-            "kind":"sound",
-            "pin": 1,
-            "type": "data"
-        },
-        "light_r":
-        {
-            "name":"RLight",
-            "kind":"light",
-            "pin": 2,
-            "type": "data"
-        },
-        "led_r":
-        {
-            "name":"RLed",
-            "kind":"led",
-            "pin": 3,
-            "type": "action"
-        },
-        "buzzer_r":
-        {
-            "name":"RBuzzer",
-            "kind":"buzzer",
-            "pin": 4,
-            "type": "action"
-        }
-    }
-}
-
-3.Create app entry: create a new python file as the app entry in your workspace, i named this file as "app.py". in this file, typing follow code:
-
-    from gateway.service import Service
-    from gateway.config import config
-
-
-    if __name__ == '__main__':
-    
-         devIot_address = config["address"]
-
-        app = Service("raspberry", devIot_address, False)
-
-        # if you want to use MQTT protocol, please set the mqtt_server address and port to app
-        app.mqtt_server = config["mqtthost"]
-        app.mqtt_port = config["mqttport"]
-        app.run()
-
-In above code, we instance a new Service, pass the DevIot address to this instance, and named this app as "raspberry". the third parameter is used to indicate if this app is support multiple user, the real sensor can not support multiple request, so we set this parameter as false.
-
-4.Operate the GrovePi.
-Add a new folder named "logic"(whatever you like), add a new python file named as "grovepioperator" under this folder, type follow code to this file:
-
-    from gateway.pioperator import PiOperator
-
-    import os
-    import random
-    
-    analog = 'analog'
-    digital = 'digital'
-    input_fix = 'INPUT'
-    output_fix = 'OUTPUT'
-    
-    is_debug = False
-    if "DEBUG" in os.environ:
-        is_debug = os.environ['DEBUG'] == 'TRUE'
-
-
-    class GrovePiOperator(PiOperator):
-    
-        @staticmethod
-        def write(pin, data):
-            if is_debug is False:
-                from grovepi import grovepi
-                grovepi.pinMode(pin, output_fix)
-                grovepi.digitalWrite(pin, data)
-            else:
-                print("write data..." + str(data))
-    
-        @staticmethod
-        def read(pin):
-            if is_debug is False:
-                from grovepi import grovepi
-                data = grovepi.analogRead(pin)
-                return data
-            else:
-                return random.randint(0, 100)
-                
-in above code, first you should create your own Pi Operator by inherit the PiOperator class and implement the write and read method. those two method use GrovePi sdk to read/write data from/to PI.
-I add is_debug variable to let this app can run without the GrovePI device, if the is_debug is True, the read method just return some random data and the write method just put out some log
-
-5.Add sensor model and logic. 
-
-create a new folder and which should be named "sensors".
-
-after above steps, your workspace should like this:
-
-![RaspberryPi workspace](images/raspberry_folder.jpg "RaspberryPi workspace")
-
-in the sensor folder, create a new python file named "temperature",add the follow code to this file:
-    
-    from gateway.sensor import Sensor
-    from gateway.sproperty import SProperty
-    from gateway.config import config
-    from gateway.sensorlogic import SensorLogic
-    from logic.grovepioperator import GrovePiOperator
-    
-    
-    sound = Sensor("sound", "sound_1", "RSound")
-    
-    value_property = SProperty("volume", 0, [0, 100], 0)
-    
-    sound.add_property(value_property)
-    
-    
-    class SoundLogic(SensorLogic):
-        pin = config["sensors"]['sound_r']['pin']
-    
-        @staticmethod
-        def update(sensor, data):
-            pin = config["sensors"][sensor.id]['pin']
-            new_value = GrovePiOperator.read(pin)
-            updated_properties = {"volume": new_value}
-            SensorLogic.update_properties(sensor, updated_properties)
-            
-In above code:
-
-* we use Sensor class to create a sound sensor model, and define a value with SProperty class. 
-
-* we create a static class named "SoundLogic" which inherit from SensorLogic and override the update method, in this method we use the GrovePiOperator to read the data from the real sound sensor.
-
-you need get more detail from GrovePi sdk to know how to covert the raw sensor data to real data.
-
-you can repeat above step to create other sensors
-
-6.Add the __init__.py file in logic and sensor folder to make other file can refer to the code in those two folder.
 
 ## Getting help
 
