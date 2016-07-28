@@ -1,7 +1,7 @@
 __author__ = 'davigar'
 
 from DevIoTGateway.sensor import *
-from DevIoTGatewayPi.config import config
+from DevIoTGateway.config import config
 from DevIoTGatewayPi.sensorlogic import SensorLogic
 from logic.grovepioperator import GrovePiOperator
 
@@ -23,4 +23,4 @@ class RotaryLogic(SensorLogic):
             updated_properties = {'angle': new_value}
         else:
             updated_properties = {}
-        SensorLogic.update_properties(sensor, updated_properties)
+        sensor.update_properties(updated_properties)

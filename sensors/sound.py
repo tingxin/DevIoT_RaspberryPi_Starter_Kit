@@ -1,7 +1,7 @@
 __author__ = 'tingxxu'
 
 from DevIoTGateway.sensor import *
-from DevIoTGatewayPi.config import config
+from DevIoTGateway.config import config
 from DevIoTGatewayPi.sensorlogic import SensorLogic
 from logic.grovepioperator import GrovePiOperator
 
@@ -21,6 +21,4 @@ class SoundLogic(SensorLogic):
         new_value = GrovePiOperator.read(pin)
         if new_value is not None:
             updated_properties = {'volume': new_value}
-        else:
-            updated_properties = {}
-        SensorLogic.update_properties(sensor, updated_properties)
+            sensor.update_properties(updated_properties)

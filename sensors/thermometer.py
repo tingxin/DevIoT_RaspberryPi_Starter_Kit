@@ -1,7 +1,7 @@
 __author__ = 'davigar'
 
 from DevIoTGateway.sensor import *
-from DevIoTGatewayPi.config import config
+from DevIoTGateway.config import config
 from DevIoTGatewayPi.sensorlogic import SensorLogic
 from logic.grovepioperator import GrovePiOperator
 
@@ -21,4 +21,4 @@ class ThermometerLogic(SensorLogic):
         pin = config['sensors'][sensor.id]['pin']
         new_temp, new_hum = GrovePiOperator.read(pin, mode='dht')
         updated_properties = {'temperature': new_temp, 'humidity': new_hum}
-        SensorLogic.update_properties(sensor, updated_properties)
+        sensor.update_properties(updated_properties)

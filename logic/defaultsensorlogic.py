@@ -1,6 +1,6 @@
 __author__ = 'tingxxu'
 
-from DevIoTGatewayPi.config import config
+from DevIoTGateway.config import config
 from DevIoTGatewayPi.sensorlogic import SensorLogic
 from grovepioperator import GrovePiOperator
 
@@ -12,7 +12,7 @@ class DefaultSensorLogic(SensorLogic):
         pin = config["sensors"][sensor.id]['pin']
         new_value = GrovePiOperator.read(pin)
         updated_properties = {"value": new_value}
-        SensorLogic.update_properties(sensor, updated_properties)
+        sensor.update_properties(updated_properties)
 
     @staticmethod
     def action(sensor, action):

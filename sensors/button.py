@@ -1,7 +1,7 @@
 __author__ = 'tingxxu'
 
 from DevIoTGateway.sensor import *
-from DevIoTGatewayPi.config import config
+from DevIoTGateway.config import config
 from DevIoTGatewayPi.sensorlogic import SensorLogic
 from logic.grovepioperator import GrovePiOperator
 
@@ -25,4 +25,4 @@ class ButtonLogic(SensorLogic):
             updated_properties = {'pressed': 1}
         else:
             updated_properties = {'pressed': 0}
-        SensorLogic.update_properties(sensor, updated_properties)
+        sensor.update_properties(updated_properties)
