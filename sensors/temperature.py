@@ -11,6 +11,7 @@ from logic.grovepioperator import GrovePiOperator
 temperature = Sensor("temperature", "temperature_r", "RTemperature")
 
 value_property = SProperty("value", 0, [0, 100], 0)
+value_property.unit = "Celsius"
 
 temperature.add_property(value_property)
 

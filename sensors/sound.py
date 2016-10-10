@@ -9,6 +9,7 @@ from logic.grovepioperator import GrovePiOperator
 sound = Sensor('sound', 'sound_1', 'RSound')
 
 value_property = SProperty('volume', 0, [0, 100], 0)
+value_property.unit = "Decibel"
 
 sound.add_property(value_property)
 

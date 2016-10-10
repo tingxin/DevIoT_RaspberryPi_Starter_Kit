@@ -11,6 +11,8 @@ thermometer = Sensor('thermometer', 'thermometer_1', 'RThermometer')
 temperature_property = SProperty('temperature', 0, [0, 100], 0)
 humidity_property = SProperty('humidity', 0, [0, 100], 0)
 
+temperature_property.unit = "Celsius"
+
 thermometer.add_property(temperature_property)
 thermometer.add_property(humidity_property)
 

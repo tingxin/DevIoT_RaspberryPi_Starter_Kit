@@ -9,7 +9,7 @@ from logic.grovepioperator import GrovePiOperator
 light = Sensor("light", "light_1", "RLight")
 
 value_property = SProperty("level", 0, [0, 100], 0)
-
+value_property.unit = "Nit"
 light.add_property(value_property)
 
 
