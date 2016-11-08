@@ -5,9 +5,16 @@ from picamera import PiCamera
 import threading
 import time
 
-path = config["sensors"]["camera_r"]['path']
+path = None
+if "camera_images" in config:
+    path = config["camera_images"]
+else:
+    import os
+    current_folder = os.getcwd()
+    path = current_folder + "/camera_images"
 
 camera = Sensor('camera', 'camera_r', 'RCamera')
+
 value_property = SProperty('CapturePath', 1, None, path)
 
 camera.add_property(value_property)
