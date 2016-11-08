@@ -1,11 +1,7 @@
-__author__ = 'tingxxu'
-
 from DevIoTGateway.sensor import *
 from DevIoTGateway.config import config
 from DevIoTGatewayPi.sensorlogic import SensorLogic
-
 from picamera import PiCamera
-
 import threading
 import time
 
@@ -19,14 +15,12 @@ camera.add_property(value_property)
 on_action = SAction('start')
 off_action = SAction('stop')
 
-
 camera.add_action(on_action)
 camera.add_action(off_action)
 
 
 class CameraLogic(SensorLogic):
-
-    camera_obj = PiCamera()
+    camera_obj = None
     t = None
 
     busy = False
@@ -51,9 +45,16 @@ class CameraLogic(SensorLogic):
 
     @staticmethod
     def capture():
-        CameraLogic.camera_obj.start_preview()
-        while CameraLogic.index > 0:
-            CameraLogic.camera_obj.capture(path)
-            time.sleep(2.5)
-            CameraLogic.index -= 1
-        CameraLogic.camera_obj.stop_preview()
+        if CameraLogic.camera_obj is not None:
+            CameraLogic.camera_obj.start_preview()
+            while CameraLogic.index > 0:
+                CameraLogic.camera_obj.capture(path)
+                time.sleep(2.5)
+                CameraLogic.index -= 1
+            CameraLogic.camera_obj.stop_preview()
+
+try:
+    CameraLogic.camera_obj = PiCamera()
+except Exception as ex:
+    print(ex.message)
+    CameraLogic.camera_obj = None
