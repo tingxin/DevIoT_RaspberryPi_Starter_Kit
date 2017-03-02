@@ -5,6 +5,8 @@ This code also can be as a sample code to show how to use the Gateway Service SD
 
 This guide will show how to build this sample step by step
 
+You can try DevIot from [http://www.ciscodeviot.com/](http://www.ciscodeviot.com/) quickly 
+
 ![RaspberryPi](images/raspberry_Pi.jpg "workspace")
 ## Table of contents
 
